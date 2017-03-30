@@ -1,6 +1,8 @@
 #ifndef R2HACKS_H
 #define R2HACKS_H
 
+#if _MSC_VER && !__INTEL_COMPILER
+
 //Prevents errors with Ws2tcpip.h
 #define _WS2TCPIP_H_
 
@@ -14,15 +16,17 @@
 #define HAVE_EPRINTF 1
 #endif //HAVE_EPRINTF
 
-//Implementation of 'sleep'
-#include <windows.h>
-static void sleep(unsigned int seconds) { Sleep(seconds * 1000); }
-
-//Dummy implementation of 'fork'
-static int fork() { __debugbreak(); return -1; }
-
 //Prevent compile errors
 #define snprintf _snprintf
 #define __attribute__(x) __declspec(dllimport)
+
+#endif //_MSC_VER
+
+//Implementation of 'sleep'
+#include <windows.h>
+inline void sleep(unsigned int seconds) { Sleep(seconds * 1000); }
+
+//Dummy implementation of 'fork'
+inline int fork() { DebugBreak(); return -1; }
 
 #endif //R2HACKS_H
