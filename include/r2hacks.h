@@ -22,10 +22,6 @@
 
 #endif //_MSC_VER
 
-//Implementation of 'sleep'
-#include <windows.h>
-inline void sleep(unsigned int seconds) { Sleep(seconds * 1000); }
-
 //Dummy implementation of 'fork'
 inline int fork() { DebugBreak(); return -1; }
 
