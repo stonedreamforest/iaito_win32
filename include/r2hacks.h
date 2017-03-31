@@ -22,7 +22,4 @@
 
 #endif //_MSC_VER
 
-//Dummy implementation of 'fork'
-inline int fork() { DebugBreak(); return -1; }
-
 #endif //R2HACKS_H
