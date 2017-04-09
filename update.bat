@@ -1,3 +1,5 @@
+@echo off
+
 ::Start this from a Visual Studio command prompt
 set R2_32DIR=radare2-w32-1.4.0-git
 set R2_64DIR=radare2-w64-1.4.0-git

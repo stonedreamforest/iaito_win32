@@ -1,7 +1,7 @@
 #ifndef R_VERSION_H
 #define R_VERSION_H 1
-#define R2_VERSION_COMMIT 14358
-#define R2_GITTAP "1.3.0-228-g4715f1e"
-#define R2_GITTIP "4715f1e2b9394aac832ff5f37e6a7504c59fd993"
-#define R2_BIRTH "2017-04-05__02:14:37"
+#define R2_VERSION_COMMIT 14413
+#define R2_GITTAP "1.3.0-302-g5ec6cde"
+#define R2_GITTIP "5ec6cde48b812207b811f4bafe0910daefec48f5"
+#define R2_BIRTH "2017-04-09__16:46:23"
 #endif
