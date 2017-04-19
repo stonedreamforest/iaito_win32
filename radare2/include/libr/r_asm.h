@@ -211,7 +211,6 @@ extern RAsmPlugin r_asm_plugin_i8080;
 extern RAsmPlugin r_asm_plugin_m68k;
 extern RAsmPlugin r_asm_plugin_m68k_cs;
 extern RAsmPlugin r_asm_plugin_arc;
-extern RAsmPlugin r_asm_plugin_rar;
 extern RAsmPlugin r_asm_plugin_dcpu16;
 extern RAsmPlugin r_asm_plugin_8051;
 extern RAsmPlugin r_asm_plugin_tms320;
@@ -246,6 +245,7 @@ extern RAsmPlugin r_asm_plugin_tricore;
 extern RAsmPlugin r_asm_plugin_pic18c;
 extern RAsmPlugin r_asm_plugin_rsp;
 extern RAsmPlugin r_asm_plugin_wasm;
+extern RAsmPlugin r_asm_plugin_tms320c64x;
 
 #endif
 

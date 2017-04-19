@@ -45,6 +45,10 @@ R_LIB_VERSION_HEADER(r_core);
 #define R_CORE_ANAL_JSON       8
 #define R_CORE_ANAL_KEYVALUE  16
 
+///
+#define R_CONS_COLOR_DEF(x, def) ((core->cons && core->cons->pal.x)? core->cons->pal.x: def)
+#define R_CONS_COLOR(x) R_CONS_COLOR_DEF (x, "")
+
 /* rtr */
 #define RTR_PROT_RAP 0
 #define RTR_PROT_TCP 1
@@ -394,6 +398,7 @@ R_API int r_core_print_disasm(RPrint *p, RCore *core, ut64 addr, ut8 *buf, int l
 R_API int r_core_print_disasm_json(RCore *core, ut64 addr, ut8 *buf, int len, int lines);
 R_API int r_core_print_disasm_instructions (RCore *core, int len, int l);
 R_API int r_core_print_disasm_all (RCore *core, ut64 addr, int l, int len, int mode);
+R_API int r_core_disasm_pdi(RCore *core, int nb_opcodes, int nb_bytes, int fmt);
 R_API int r_core_print_fcn_disasm(RPrint *p, RCore *core, ut64 addr, int l, int invbreak, int cbytes);
 R_API int r_core_file_bin_raise (RCore *core, ut32 binfile_idx);
 //R_API int r_core_bin_bind(RCore *core, RBinFile *bf);
@@ -485,6 +490,8 @@ typedef struct r_core_bin_filter_t {
 R_API int r_core_bin_info (RCore *core, int action, int mode, int va, RCoreBinFilter *filter, const char *chksum);
 R_API int r_core_bin_set_arch_bits (RCore *r, const char *name, const char * arch, ut16 bits);
 R_API int r_core_bin_update_arch_bits (RCore *r);
+R_API char *r_core_bin_method_flags_str(RBinSymbol *sym, int mode);
+
 /* rtr */
 R_API int r_core_rtr_cmds (RCore *core, const char *port);
 R_API char *r_core_rtr_cmds_query (RCore *core, const char *host, const char *port, const char *cmd);

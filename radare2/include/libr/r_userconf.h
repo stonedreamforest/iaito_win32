@@ -17,7 +17,7 @@
 #define R2_DATDIR "/usr/local/share"
 #endif
 
-#define R2_VERSION "1.4.0-git"
+#define R2_VERSION "1.4.0"
 #define HAVE_LIB_MAGIC 0
 #define USE_LIB_MAGIC 0
 #ifndef HAVE_LIB_SSL
