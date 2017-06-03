@@ -352,7 +352,7 @@ typedef struct r_bin_plugin_t {
 	RList/*<RBinMem>*/* (*mem)(RBinFile *arch);
 	RList/*<RBinReloc>*/* (*patch_relocs)(RBin *bin);
 	void (*header)(RBinFile *arch);
-	char* (*signature)(RBinFile *arch);
+	char* (*signature)(RBinFile *arch, bool json);
 	int (*demangle_type)(const char *str);
 	struct r_bin_dbginfo_t *dbginfo;
 	struct r_bin_write_t *write;
@@ -422,6 +422,7 @@ typedef struct r_bin_symbol_t {
 	int bits;
 	/* see R_BIN_METH_* constants */
 	ut64 method_flags;
+	int dup_count;
 } RBinSymbol;
 
 typedef struct r_bin_import_t {

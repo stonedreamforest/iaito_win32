@@ -1,6 +1,11 @@
 #ifndef R2_SOCKET_H
 #define R2_SOCKET_H
 
+/* Must be included before windows.h (r_types) */
+#if defined(__WINDOWS__) && !defined(__CYGWIN__) && !defined(MINGW32) && !defined(__MINGW64__)
+//#include <ws2tcpip.h>
+#endif
+
 #include "r_types.h"
 
 #ifdef __cplusplus
@@ -22,10 +27,6 @@ R_LIB_VERSION_HEADER(r_socket);
 #if HAVE_LIB_SSL
 #include <openssl/ssl.h>
 #include <openssl/err.h>
-#endif
-
-#if defined(__WINDOWS__) && !defined(__CYGWIN__) && !defined(MINGW32) && !defined(__MINGW64__)
-#include <ws2tcpip.h>
 #endif
 
 #if __UNIX__ || defined(__CYGWIN__)
@@ -54,7 +55,11 @@ typedef struct {
 } R2Pipe;
 
 typedef struct r_socket_t {
+#ifdef _MSC_VER
+	SOCKET fd;
+#else
 	int fd;
+#endif
 	int is_ssl;
 	int local; // TODO: merge ssl with local -> flags/options
 	int port;
@@ -215,10 +220,9 @@ typedef struct r_run_profile_t {
 } RRunProfile;
 
 R_API RRunProfile *r_run_new(const char *str);
-R_API int r_run_parseline (RRunProfile *p, char *b);
-R_API int r_run_parse(RRunProfile *pf, const char *profile);
+R_API bool r_run_parse(RRunProfile *pf, const char *profile);
 R_API void r_run_free (RRunProfile *r);
-R_API int r_run_parseline (RRunProfile *p, char *b);
+R_API bool r_run_parseline (RRunProfile *p, char *b);
 R_API const char *r_run_help(void);
 R_API int r_run_config_env(RRunProfile *p);
 R_API int r_run_start(RRunProfile *p);

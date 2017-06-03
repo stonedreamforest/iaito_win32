@@ -12,8 +12,20 @@
 #include <r_th.h>
 #if !__WINDOWS__
 #include <dirent.h>
+#include <signal.h>
+#endif
+#ifdef HAVE_LIB_GMP
+#include <gmp.h>
+#endif
+#if HAVE_LIB_SSL
+#include <openssl/bn.h>
+#endif
+#ifdef _MSC_VER
+#include <windows.h>
+int gettimeofday (struct timeval* p, void* tz);
 #endif
 #include <sys/time.h>
+#include "r_util/r_big.h"
 #include "r_util/r_base64.h"
 #include "r_util/r_base91.h"
 #include "r_util/r_buf.h"
@@ -47,17 +59,9 @@
 #include "r_util/r_utf8.h"
 #include "r_util/r_id_storage.h"
 #include "r_util/r_asn1.h"
+#include "r_util/r_json.h"
 #include "r_util/r_x509.h"
 #include "r_util/r_pkcs7.h"
-#if __UNIX__
-#include <signal.h>
-#endif
-#ifdef HAVE_LIB_GMP
-#include <gmp.h>
-#endif
-#if HAVE_LIB_SSL
-#include <openssl/bn.h>
-#endif
 
 #ifdef __cplusplus
 extern "C" {

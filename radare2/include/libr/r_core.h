@@ -6,7 +6,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#include "r_socket.h"
 #include "r_types.h"
 #include "r_magic.h"
 #include "r_io.h"
@@ -28,7 +28,6 @@ extern "C" {
 #include "r_config.h"
 #include "r_bin.h"
 #include "r_hash.h"
-#include "r_socket.h"
 #include "r_util.h"
 #include "r_crypto.h"
 #include "r_bind.h"
@@ -61,7 +60,7 @@ R_LIB_VERSION_HEADER(r_core);
 
 #define RTR_MAX_HOSTS 255
 
-#define R_CORE_CMD_DEPTH 10
+#define R_CORE_CMD_DEPTH 100
 
 typedef struct r_core_rtr_host_t {
 	int proto;
@@ -140,6 +139,8 @@ typedef struct r_core_t {
 	RAGraph *graph;
 	char *cmdqueue;
 	char *lastcmd;
+	char *cmdlog;
+	bool cfglog;
 	int cmdrepeat;
 	ut64 inc;
 	int rtr_n;
@@ -153,6 +154,7 @@ typedef struct r_core_t {
 	bool keep_asmqjmps;
 	// visual
 	int http_up;
+	int gdbserver_up;
 	int printidx;
 	int vseek;
 	bool in_search;
@@ -394,6 +396,7 @@ R_API RList *r_core_asm_bwdisassemble (RCore *core, ut64 addr, int n, int len);
 R_API RList *r_core_asm_back_disassemble_instr (RCore *core, ut64 addr, int len, ut32 hit_count, ut32 extra_padding);
 R_API RList *r_core_asm_back_disassemble_byte (RCore *core, ut64 addr, int len, ut32 hit_count, ut32 extra_padding);
 R_API ut32 r_core_asm_bwdis_len (RCore* core, int* len, ut64* start_addr, ut32 l);
+R_API void r_core_print_fortune(RCore *core);
 R_API int r_core_print_disasm(RPrint *p, RCore *core, ut64 addr, ut8 *buf, int len, int lines, int invbreak, int nbytes);
 R_API int r_core_print_disasm_json(RCore *core, ut64 addr, ut8 *buf, int len, int lines);
 R_API int r_core_print_disasm_instructions (RCore *core, int len, int l);
@@ -406,7 +409,7 @@ R_API int r_core_bin_set_env (RCore *r, RBinFile *binfile);
 R_API int r_core_bin_set_by_fd (RCore *core, ut64 bin_fd);
 R_API int r_core_bin_set_by_name (RCore *core, const char *name);
 R_API int r_core_bin_reload(RCore *core, const char *file, ut64 baseaddr);
-R_API int r_core_bin_load(RCore *core, const char *file, ut64 baseaddr);
+R_API bool r_core_bin_load(RCore *core, const char *file, ut64 baseaddr);
 R_API int r_core_bin_rebase(RCore *core, ut64 baddr);
 R_API void r_core_bin_export_info_rad(RCore *core);
 R_API int r_core_hash_load(RCore *core, const char *file);
@@ -423,7 +426,7 @@ R_API int r_core_pseudo_code (RCore *core, const char *input);
 R_API int r_core_gdiff(RCore *core1, RCore *core2);
 R_API int r_core_gdiff_fcn(RCore *c, ut64 addr, ut64 addr2);
 
-R_API int r_core_project_open(RCore *core, const char *file, bool thready);
+R_API bool r_core_project_open(RCore *core, const char *file, bool thready);
 R_API int r_core_project_cat(RCore *core, const char *name);
 R_API int r_core_project_delete(RCore *core, const char *prjfile);
 R_API int r_core_project_list(RCore *core, int mode);
@@ -466,7 +469,8 @@ R_API void fcn_callconv (RCore *core, RAnalFunction *fcn);
 #define R_CORE_BIN_ACC_SIGNATURE 0x20000
 #define R_CORE_BIN_ACC_RAW_STRINGS	0x40000
 #define R_CORE_BIN_ACC_HEADER 0x80000
-#define R_CORE_BIN_ACC_ALL	0x4FFF
+#define R_CORE_BIN_ACC_RESOURCES 0x100000
+#define R_CORE_BIN_ACC_ALL	0x104FFF
 
 #define R_CORE_PRJ_FLAGS	0x0001
 #define R_CORE_PRJ_EVAL		0x0002
@@ -504,6 +508,7 @@ R_API void r_core_rtr_session(RCore *core, const char *input);
 R_API void r_core_rtr_cmd(RCore *core, const char *input);
 R_API int r_core_rtr_http(RCore *core, int launch, const char *path);
 R_API int r_core_rtr_http_stop(RCore *u);
+R_API int r_core_rtr_gdb(RCore *core, int launch, const char *path);
 
 R_API void r_core_visual_config (RCore *core);
 R_API void r_core_visual_mounts (RCore *core);

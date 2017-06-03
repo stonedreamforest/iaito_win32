@@ -330,6 +330,7 @@ enum {
 	R_ANAL_OP_FAMILY_CPU = 0,/* normal cpu instruction */
 	R_ANAL_OP_FAMILY_FPU,    /* fpu (floating point) */
 	R_ANAL_OP_FAMILY_MMX,    /* multimedia instruction (packed data) */
+	R_ANAL_OP_FAMILY_SSE,    /* extended multimedia instruction (packed data) */
 	R_ANAL_OP_FAMILY_PRIV,   /* priviledged instruction */
 	R_ANAL_OP_FAMILY_CRYPTO, /* cryptographic instructions */
 	R_ANAL_OP_FAMILY_VIRT,   /* virtualization instructions */
@@ -626,6 +627,7 @@ typedef struct r_anal_t {
 	Sdb *sdb_zigns;
 	RSpaces meta_spaces;
 	RSpaces zign_spaces;
+	char *zign_path;
 	PrintfCallback cb_printf;
 	//moved from RAnalFcn
 	Sdb *sdb; // root
@@ -650,6 +652,8 @@ typedef struct r_anal_t {
 	RList /*RAnalRange*/ *bits_ranges;
 	RListComparator columnSort;
 	int stackptr;
+	bool (*log)(struct r_anal_t *anal, const char *msg);
+	char *cmdtail;
 } RAnal;
 
 typedef RAnalFunction *(* RAnalGetFcnIn)(RAnal *anal, ut64 addr, int type);

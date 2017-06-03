@@ -25,6 +25,10 @@ extern "C" {
 #define SDB_MIN_KEY 1
 #define SDB_MAX_KEY 0xff
 
+#if !defined(SZT_ADD_OVFCHK)
+#define SZT_ADD_OVFCHK(x, y) ((SIZE_MAX - (x)) <= (y))
+#endif
+
 #if __SDB_WINDOWS__ && !__CYGWIN__
 #include <windows.h>
 #include <fcntl.h>
@@ -32,8 +36,15 @@ extern "C" {
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <io.h>
+#ifndef _MSC_VER
 extern __attribute__((dllimport)) void *__cdecl _aligned_malloc(size_t, size_t);
 extern char *strdup (const char *);
+#else
+#include <process.h>
+#include <windows.h>
+#include <malloc.h> // for _aligned_malloc
+#define ftruncate _chsize
+#endif
 #undef r_offsetof
 #define r_offsetof(type, member) ((unsigned long) (ut64)&((type*)0)->member)
 //#define SDB_MODE 0
@@ -88,6 +99,7 @@ typedef struct sdb_t {
 	SdbList *hooks;
 	SdbKv tmpkv;
 	ut32 depth;
+	bool timestamped;
 } Sdb;
 
 typedef struct sdb_ns_t {

@@ -3,8 +3,8 @@
 
 #if _MSC_VER && !__INTEL_COMPILER
 
-//Prevents errors with Ws2tcpip.h
-#define _WS2TCPIP_H_
+//Fucking winsock
+#include <winsock.h>
 
 //Prevent incompatible named variadic macro error
 #include "types.h"

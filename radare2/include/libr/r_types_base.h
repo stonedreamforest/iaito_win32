@@ -13,6 +13,7 @@
 #define ut8 unsigned char
 #define st8 signed char
 #define boolt int
+
 typedef struct _ut80 {
 	ut64 Low;
 	ut16 High;
@@ -87,10 +88,13 @@ typedef struct _utX{
 #define UT32_HI(x) ((ut32)(((ut64)(x))>>32)&UT32_MAX)
 
 /* preventive math overflow checks */
-#define UT64_ADD_OVFCHK(x,y) ((UT64_MAX - x) <= y)
-#define UT32_ADD_OVFCHK(x,y) ((UT32_MAX - x) <= y)
-#define UT16_ADD_OVFCHK(x,y) ((UT16_MAX - x) <= y)
-#define UT8_ADD_OVFCHK(x,y) ((UT8_MAX - x) <= y)
+#if !defined(SZT_ADD_OVFCHK)
+#define SZT_ADD_OVFCHK(x,y) ((SIZE_MAX - (x)) <= (y))
+#endif
+#define UT64_ADD_OVFCHK(x,y) ((UT64_MAX - (x)) <= (y))
+#define UT32_ADD_OVFCHK(x,y) ((UT32_MAX - (x)) <= (y))
+#define UT16_ADD_OVFCHK(x,y) ((UT16_MAX - (x)) <= (y))
+#define UT8_ADD_OVFCHK(x,y) ((UT8_MAX - (x)) <= (y))
 
 /* copied from bithacks.h */
 #define B_IS_SET(x, n)   (((x) & (1<<(n)))?1:0)
@@ -125,5 +129,11 @@ typedef struct _utX{
 #if !defined(NAN)
 #define NAN (0.0f/0.0f)
 #endif
-
+#ifdef _MSC_VER
+#define R_PACKED( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop) )
+#undef INFINITY
+#undef NAN
+#elif defined(__GNUC__)
+#define R_PACKED( __Declaration__ ) __Declaration__ __attribute__((__packed__))
+#endif
 #endif
